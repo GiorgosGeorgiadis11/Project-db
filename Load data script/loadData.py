@@ -16,25 +16,94 @@ def createDatabase():
 def createCountyTable():
     countries = pd.read_csv(folderName+"\Countries.csv",skiprows=0)
     columnName = countries.columns
-    idQuery = "id INT AUTO_INCREMENT PRIMARY KEY"
+    EndQuery = "UNIQUE KEY (Country_Code)"
     query = ""
-    for q in columnName:
+    for i,q in enumerate(columnName):
         q = q.replace(" ","_")
-        query = query +q + " VARCHAR(40),"
-    query = query + idQuery
+        if i == 0:
+            query = query +q + " INT PRIMARY KEY,"
+        else:
+            query = query +q + " VARCHAR(40),"
+    query = query + EndQuery
     cursor.execute("CREATE TABLE IF NOT EXISTS Countries("+query+")")
     print("Table Countries was succesfully created")
 
 
 def loadInTableCountries():
     cursor.execute("SET GLOBAL local_infile=1;")
-    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/Countries.csv' INTO TABLE Countries FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES;""")
+    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/Countries.csv' INTO TABLE Countries FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES;""")
     connection.commit()
     print("Data Countries succesfully loaded")
+
+def createIndicatorTable():
+    Indicators = pd.read_csv(folderName+"\Indicators.csv",skiprows=0)
+    columnName = Indicators.columns
+    EndQuery = "UNIQUE KEY (Indicator_Code)"
+    query = ""
+    for i,q in enumerate(columnName):
+        q = q.replace(" ","_")
+        if i == 0:
+            query = query +q + " INT PRIMARY KEY,"
+        elif i == 1:
+            query = query +q + " VARCHAR(100),"
+        else:
+            query = query +q + " VARCHAR(3000),"
+    query = query + EndQuery
+    cursor.execute("CREATE TABLE IF NOT EXISTS Indicators("+query+")")
+    print("Table Indicators was succesfully created")
+
+def loadInTableIndicators():
+    cursor.execute("SET GLOBAL local_infile=1;")
+    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/Indicators.csv' INTO TABLE Indicators FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES;""")
+    connection.commit()
+    print("Data Indicators succesfully loaded")
+
+def createDataTable():
+    AllData = pd.read_csv(folderName+"\AllData.csv",skiprows=0)
+    columnName = AllData.columns
+    #EndQuery = "FOREIGN KEY (Country_Id) REFERENCES Countries(Country_Id), FOREIGN KEY (Indicator_Id) REFERENCES Indicators(Indicator_Id)"
+    query = ""
+    for i,q in enumerate(columnName):
+        q = q.replace(" ","_")
+        if i < 2:
+            query = query +q + " INT,"
+        else:
+            query = query +q + " VARCHAR(100),"
+    query = query[:-1]
+    cursor.execute("CREATE TABLE IF NOT EXISTS AllData("+query+")")
+    print("Table AllData was succesfully created")
+
+def loadInTableData():
+    startLoad = time.time()
+    cursor.execute("SET GLOBAL local_infile=1;")
+    cursor.execute("SET @@FOREIGN_KEY_CHECKS = 0;")
+    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/AllData.csv' INTO TABLE AllData FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES;""")
+    endLoad = time.time()
+    totalLoad = endLoad - startLoad
+    print("load time is: "+str(totalLoad))
+
+    startForeign1 = time.time()
+    cursor.execute("ALTER TABLE AllData ADD FOREIGN KEY (Country_Id) REFERENCES Countries(Country_Id)")
+    endForeign1 = time.time()
+    totalForeign1 = endForeign1 - startForeign1
+    print("foreign 1 time is: "+str(totalForeign1))
+
+    startForeign2 = time.time()
+    cursor.execute("ALTER TABLE AllData ADD FOREIGN KEY (Indicator_Id) REFERENCES Indicators(Indicator_Id)")
+    endForeign2 = time.time()
+    totalForeign2 = endForeign2 - startForeign2
+    print("foreign 2 time is: "+str(totalForeign2))
+    connection.commit()
+    print("Data AllData succesfully loaded")
+    
 
 
 def main():
     createDatabase()
     createCountyTable()
     loadInTableCountries()
+    createIndicatorTable()
+    loadInTableIndicators()
+    createDataTable()
+    loadInTableData()
 main()
