@@ -19,7 +19,12 @@ def createCountyTable():
     EndQuery = "UNIQUE KEY (Country_Code)"
     query = ""
     for i,q in enumerate(columnName):
+        r = re.findall('([A-Z])', q[1:])
         q = q.replace(" ","_")
+        if r :
+            ind = q[1:].index(r[0])
+            if q[ind] !="_":
+                q = q.replace(r[0],"_"+r[0])
         if i == 0:
             query = query +q + " INT PRIMARY KEY,"
         else:
@@ -65,7 +70,7 @@ def createDataTable():
     query = ""
     for i,q in enumerate(columnName):
         q = q.replace(" ","_")
-        if i < 2:
+        if i < 3:
             query = query +q + " INT,"
         else:
             query = query +q + " VARCHAR(100),"
@@ -93,6 +98,12 @@ def loadInTableData():
     endForeign2 = time.time()
     totalForeign2 = endForeign2 - startForeign2
     print("foreign 2 time is: "+str(totalForeign2))
+
+    startPrimary = time.time()
+    cursor.execute("ALTER TABLE AllData ADD PRIMARY KEY(Country_Id,Indicator_Id,Year)")
+    endPrimary = time.time()
+    totalPrimary = endPrimary - startPrimary
+    print("Primary time is: "+str(totalPrimary))
     connection.commit()
     print("Data AllData succesfully loaded")
     
