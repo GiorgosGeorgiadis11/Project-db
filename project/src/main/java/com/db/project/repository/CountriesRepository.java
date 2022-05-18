@@ -12,4 +12,6 @@ public interface CountriesRepository extends JpaRepository<Countries,Integer> {
 
     @Query("FROM countries WHERE Country_Id= :Id")
     public List<Countries> findByCountryId(Integer Id);
+
+
 }

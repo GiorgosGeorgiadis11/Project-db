@@ -36,7 +36,7 @@ def createCountyTable():
 
 def loadInTableCountries():
     cursor.execute("SET GLOBAL local_infile=1;")
-    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/Countries.csv' INTO TABLE Countries FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES;""")
+    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/Countries.csv' INTO TABLE Countries FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;""")
     connection.commit()
     print("Data Countries succesfully loaded")
 
@@ -52,14 +52,14 @@ def createIndicatorTable():
         elif i == 1:
             query = query +q + " VARCHAR(100),"
         else:
-            query = query +q + " VARCHAR(3000),"
+            query = query +q + " TEXT,"
     query = query + EndQuery
     cursor.execute("CREATE TABLE IF NOT EXISTS Indicators("+query+")")
     print("Table Indicators was succesfully created")
 
 def loadInTableIndicators():
     cursor.execute("SET GLOBAL local_infile=1;")
-    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/Indicators.csv' INTO TABLE Indicators FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES;""")
+    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/Indicators.csv' INTO TABLE Indicators FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;""")
     connection.commit()
     print("Data Indicators succesfully loaded")
 
@@ -73,7 +73,7 @@ def createDataTable():
         if i < 3:
             query = query +q + " INT,"
         else:
-            query = query +q + " VARCHAR(100),"
+            query = query +q + " DOUBLE,"
     query = query[:-1]
     cursor.execute("CREATE TABLE IF NOT EXISTS AllData("+query+")")
     print("Table AllData was succesfully created")
@@ -82,7 +82,7 @@ def loadInTableData():
     startLoad = time.time()
     cursor.execute("SET GLOBAL local_infile=1;")
     cursor.execute("SET @@FOREIGN_KEY_CHECKS = 0;")
-    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/AllData.csv' INTO TABLE AllData FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n' IGNORE 1 LINES;""")
+    cursor.execute("LOAD DATA LOCAL INFILE '"+folderName+"""/AllData.csv' INTO TABLE AllData FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES;""")
     endLoad = time.time()
     totalLoad = endLoad - startLoad
     print("load time is: "+str(totalLoad))

@@ -4,17 +4,91 @@
     <title>graph</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script-->
     <link   href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+
 </head>
 <body>
-    <label>Data:</label><br>
-    <label th:each="graphData : ${graphData}" th:text="${graphData.Table_Name}"></label><br>
-    <label th:each="graphData : ${graphData}" th:text="${graphData.Indicator_Name}"></label><br>
-    <label th:each="graphData : ${graphData}" th:text="${graphData.Year}"></label><br>
-    <label th:each="graphData : ${graphData}" th:text="${graphData.Value}"></label><br>
-    <a href="/graph">graph data</a>
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+    </figure>
+    <!--<div th:each="data : ${graphData}" >
+        <label>Data:</label><br>
+        <label th:text="${data.Table_Name}"></label><br>
+        <label th:text="${data.Indicator_Name}"></label><br>
+        <label th:text="${data.Year}"></label><br>
+        <label th:text="${data.Value}"></label><br><br>
+    </div>-->
+    <!--<input type="hidden" id="DID" name="DName" value="placeholder" th:value="${graphData}" />
+    <input type="hidden" id="CId" name="CName" value="placeholder" th:value="${data.Table_Name}" />
+    <input type="hidden" id="IId" name="IName" value="placeholder" th:value="${data.Indicator_Name}" />
+    <input type="hidden" id="YId" name="YName" value="placeholder" th:value="${data.Year}" />
+    <input type="hidden" id="VId" name="VName" value="placeholder" th:value="${data.Value}" />-->
+    <a href="/graph" class="btn btn-primary">graph data</a>
+
+    <script th:inline="javascript">
+        var data1 = [[${country1}]]
+        console.log(data1)
+        var data2 = [[${country2}]]
+        console.log(data2)
+        var data = []
+        for (let i = 0; i < [[${countryLen}]]; i++) {
+            data.push({"name": 'Installation'+(i+1).toString(),"data": data1})
+        }
+        Highcharts.chart('container', {
+
+            title: {
+                text: 'test graph'
+            },
+
+            yAxis: {
+                title: {
+                    text: 'value'
+                }
+            },
+
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+                    pointStart: [[${pointSYear}]],
+                }
+            },
+
+            series: data,
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
+    </script>
 </body>
 </html>

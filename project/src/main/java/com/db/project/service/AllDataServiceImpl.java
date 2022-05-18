@@ -37,7 +37,7 @@ public class AllDataServiceImpl implements AllDataService{
     }
 
     @Override
-    public List<graphDataDTO> getGraphData(Integer Country_Id, Integer Indicator_Id, Integer Year) {
-        return allDataRepository.getGraphData(Country_Id,Indicator_Id,Year);
+    public List<Double> getGraphData(List<Integer> Countries_Id, List<Integer> Indicators_Id, Integer YearBefore, Integer YearAfter) {
+        return allDataRepository.getGraphData(Countries_Id,Indicators_Id,YearBefore,YearAfter);
     }
 }

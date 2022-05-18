@@ -13,5 +13,5 @@ public interface AllDataService {
 
     public List<Integer> getAllYears();
 
-    public List<graphDataDTO> getGraphData(Integer Country_Id,Integer Indicator_Id,Integer Year);
+    public List<Double> getGraphData(List<Integer> Countries_Id,List<Integer> Indicators_Id,Integer YearBefore,Integer YearAfter);
 }

@@ -18,12 +18,12 @@ public class AllData {
     @Column(name = "Year")
     private int Year;
     @Column(name = "Value")
-    private String Value;
+    private double Value;
 
     public AllData() {
     }
 
-    public AllData(int country_Id, int indicator_Id, int year, String value) {
+    public AllData(int country_Id, int indicator_Id, int year, double value) {
         Country_Id = country_Id;
         Indicator_Id = indicator_Id;
         Year = year;
@@ -54,11 +54,11 @@ public class AllData {
         Year = year;
     }
 
-    public String getValue() {
+    public double getValue() {
         return Value;
     }
 
-    public void setValue(String value) {
+    public void setValue(double value) {
         Value = value;
     }
 }

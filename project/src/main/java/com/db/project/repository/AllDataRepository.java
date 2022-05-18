@@ -12,13 +12,14 @@ import java.util.List;
 @Repository
 public interface AllDataRepository extends JpaRepository<AllData, AllDataPKID> {
 
-    @Query(value = "SELECT c.Table_Name,i.Indicator_Name,a.Year,a.Value\n"+
+    //c.Table_Name,i.Indicator_Name,a.Year,
+    @Query(value = "SELECT a.Value\n"+
             " FROM AllData as a\n" +
             "INNER JOIN countries as c ON a.Country_Id=c.Country_Id\n" +
             "INNER JOIN Indicators as i ON a.Indicator_Id=i.Indicator_Id\n" +
-            "WHERE a.Country_Id=:Country_Id AND a.Indicator_Id = :Indicator_Id\n" +
-            "AND a.Year=:Year",nativeQuery = true)
-    public List<graphDataDTO> getGraphData(Integer Country_Id,Integer Indicator_Id,Integer Year);
+            "WHERE a.Country_Id in (:Countries_Id) AND a.Indicator_Id in (:Indicators_Id)\n" +
+            "AND (a.Year BETWEEN :YearBefore AND :YearAfter)",nativeQuery = true)
+    public List<Double> getGraphData(List<Integer> Countries_Id,List<Integer> Indicators_Id,Integer YearBefore,Integer YearAfter);
 
     @Query(value = "SELECT Year FROM AllData WHERE Country_Id=1 AND Indicator_Id=1",nativeQuery = true)
     public List<Integer> getAllYears();
