@@ -21,29 +21,29 @@
     <figure class="highcharts-figure">
         <div id="container"></div>
     </figure>
-    <!--<div th:each="data : ${graphData}" >
-        <label>Data:</label><br>
-        <label th:text="${data.Table_Name}"></label><br>
-        <label th:text="${data.Indicator_Name}"></label><br>
-        <label th:text="${data.Year}"></label><br>
-        <label th:text="${data.Value}"></label><br><br>
-    </div>-->
-    <!--<input type="hidden" id="DID" name="DName" value="placeholder" th:value="${graphData}" />
-    <input type="hidden" id="CId" name="CName" value="placeholder" th:value="${data.Table_Name}" />
-    <input type="hidden" id="IId" name="IName" value="placeholder" th:value="${data.Indicator_Name}" />
-    <input type="hidden" id="YId" name="YName" value="placeholder" th:value="${data.Year}" />
-    <input type="hidden" id="VId" name="VName" value="placeholder" th:value="${data.Value}" />-->
+
     <a href="/graph" class="btn btn-primary">graph data</a>
 
+
+
+
     <script th:inline="javascript">
-        var data1 = [[${country1}]]
-        console.log(data1)
-        var data2 = [[${country2}]]
-        console.log(data2)
+        var dataValues = [[${dataValues}]];
+        var countryNames = [[${countryNames}]];
+        var indicatorNames = [[${indicatorNames}]];
+
+
+
         var data = []
-        for (let i = 0; i < [[${countryLen}]]; i++) {
-            data.push({"name": 'Installation'+(i+1).toString(),"data": data1})
+        let counter = 0
+        for (let i = 0; i < [[${indicatorLen}]]; i++) {
+            for(let j=0; j<[[${countryLen}]]; j++){
+                data.push({"name": indicatorNames[i] + "for" + countryNames[j],"data": dataValues[counter]})
+                counter ++
+            }
+
         }
+
         Highcharts.chart('container', {
 
             title: {

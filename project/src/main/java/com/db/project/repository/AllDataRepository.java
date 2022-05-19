@@ -24,4 +24,9 @@ public interface AllDataRepository extends JpaRepository<AllData, AllDataPKID> {
     @Query(value = "SELECT Year FROM AllData WHERE Country_Id=1 AND Indicator_Id=1",nativeQuery = true)
     public List<Integer> getAllYears();
 
+    @Query(value = "SELECT DISTINCT c.Table_Name FROM AllData as a INNER JOIN countries as c ON a.Country_Id=c.Country_Id WHERE a.Country_Id = :countryId",nativeQuery = true)
+    public String getCountryNameById(Integer countryId);
+
+    @Query(value = "SELECT DISTINCT i.INDICATOR_NAME FROM AllData as a INNER JOIN indicators as i ON a.Indicator_Id=i.Indicator_Id WHERE a.Indicator_Id = :indicatorId",nativeQuery = true)
+    public String getIndicatorNameById(Integer indicatorId);
 }

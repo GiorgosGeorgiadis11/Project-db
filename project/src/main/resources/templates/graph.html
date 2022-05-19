@@ -23,7 +23,7 @@
             width: 100%;
         }
     </style>
-        <form action="#" th:action="@{/viewGraph}" th:object="${obj}" method="post">
+        <form action="#" th:action="@{/barChart}" th:object="${obj}" method="post">
             <label>Country Name:</label><br>
             <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3">
                 <div class="form-group">
@@ -58,7 +58,7 @@
                         th:text="${Year}"
                         th:value="${Year}">
                 </option>
-            </select><br>
+            </select><br><br>
             <button type="submit" class="btn btn-info col-2">graph</button>
         </form>
 

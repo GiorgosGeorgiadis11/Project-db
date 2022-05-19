@@ -40,4 +40,14 @@ public class AllDataServiceImpl implements AllDataService{
     public List<Double> getGraphData(List<Integer> Countries_Id, List<Integer> Indicators_Id, Integer YearBefore, Integer YearAfter) {
         return allDataRepository.getGraphData(Countries_Id,Indicators_Id,YearBefore,YearAfter);
     }
+
+    @Override
+    public String getCountryNameById(Integer countryId) {
+        return allDataRepository.getCountryNameById(countryId);
+    }
+
+    @Override
+    public String getIndicatorNameById(Integer indicatorId) {
+        return allDataRepository.getIndicatorNameById(indicatorId);
+    }
 }
