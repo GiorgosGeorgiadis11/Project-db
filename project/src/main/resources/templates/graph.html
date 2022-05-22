@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
 
+
 </head>
 <body>
     <style>
@@ -98,43 +99,63 @@
             });
         })
         function disEnButtons(){
+            lineChart = document.getElementById("lineChart");
+            barChart = document.getElementById("barChart");
+            scatterChart = document.getElementById("scatterChart");
+            avg5Id = document.getElementById("avg5Id");
+            avg10Id = document.getElementById("avg10Id");
             var yearBef = document.getElementById('yearBId');
             var valueB = yearBef.options[yearBef.selectedIndex].value;
             var yearAft = document.getElementById('yearAId');
             var valueA = yearAft.options[yearAft.selectedIndex].value;
-            if(valueB<=valueA) {
-                document.getElementById("lineChart").disabled = false;
-                if ((valueA - valueB) < 5) {
-                    document.getElementById("avg5Id").disabled = true;
-                    document.getElementById("avg5Id").checked = false;
-                } else {
-                    document.getElementById("avg5Id").disabled = false;
+            try {
+                var country = document.getElementById('NId');
+                var valueC = country.options[country.selectedIndex].value;
+                var indicator = document.getElementById('IId');
+                var valueI = indicator.options[indicator.selectedIndex].value;
+                lineChart.disabled = false;
+                barChart.disabled = false;
+                if($('#IId :selected').size()==2) {
+                    scatterChart.disabled = false;
                 }
-                if ((valueA - valueB) < 10) {
-                    document.getElementById("avg10Id").disabled = true;
-                    document.getElementById("avg10Id").checked = false;
+                if (valueB <= valueA) {
+                    lineChart.disabled = false;
+                    barChart.disabled = false;
+                    if($('#IId :selected').size()==2) {
+                        scatterChart.disabled = false;
+                    }
+                    if ((valueA - valueB) < 5) {
+                        avg5Id.disabled = true;
+                        avg5Id.checked = false;
+                    } else {
+                        avg5Id.disabled = false;
+                    }
+                    if ((valueA - valueB) < 10) {
+                        avg10Id.disabled = true;
+                        avg10Id.checked = false;
+                    } else {
+                        avg10Id.disabled = false;
+                    }
+                    if(avg5Id.checked==true && avg10Id.checked==true){
+                        avg5Id.checked = false;
+                        avg10Id.checked = false;
+                    }
                 } else {
-                    document.getElementById("avg10Id").disabled = false;
+                    lineChart.disabled = true;
+                    barChart.disabled = true;
+                    scatterChart.disabled = true;
+                    avg5Id.disabled = true;
+                    avg5Id.checked = false;
+                    avg10Id.disabled = true;
+                    avg10Id.checked = false;
                 }
-            }
-            else{
-                document.getElementById("lineChart").disabled = true;
-                document.getElementById("avg5Id").disabled = true;
-                document.getElementById("avg5Id").checked = false;
-                document.getElementById("avg10Id").disabled = true;
-                document.getElementById("avg10Id").checked = false;
-            }
-
-            /*try{
-                var yearBef = document.getElementById('yearBId');
-                var value = sel.options[sel.selectedIndex].value;
-                document.getElementById("lineChart").disabled = false;
             }
             catch{
-                document.getElementById("lineChart").disabled = true;
-            }*/
+                lineChart.disabled = true;
+                barChart.disabled = true;
+                scatterChart.disabled = true;
+            }
         }
-
     </script>
 </body>
 </html>

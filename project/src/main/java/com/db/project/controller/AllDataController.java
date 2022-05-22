@@ -22,6 +22,7 @@ public class AllDataController {
     private AllDataService allDataService;
 
     @RequestMapping("/index")
+    @ResponseBody
     public String indexPage(){
         return  "index";
     }
@@ -52,6 +53,7 @@ public class AllDataController {
         JSONObject indicatorNames = new JSONObject();
 
         int dataCounter = 0;
+        List<String> years = new ArrayList<>();
         for(int indicatorsCounter = 0;  indicatorsCounter<indicatorLen;   indicatorsCounter++) {
             for (int countriesCounter = 0; countriesCounter < countryLen; countriesCounter++) {
                 List<Integer> country = Arrays.asList(data.getCountries_Id().get(countriesCounter));
@@ -59,9 +61,11 @@ public class AllDataController {
                 List<Double> graphData = allDataService.getGraphData(country, indicator, data.getYearBefore(), data.getYearAfter());
                 if(data.isYears5()){
                     graphData = findAverage(graphData,data.getYearAfter()-data.getYearBefore(),5);
+                    years = findYearsAverage(years,data.getYearBefore(),data.getYearAfter(),5);
                 }
                 if(data.isYears10()){
                     graphData = findAverage(graphData,data.getYearAfter()-data.getYearBefore(),10);
+                    years = findYearsAverage(years,data.getYearBefore(),data.getYearAfter(),10);
                 }
 
                 dataValues.put(dataCounter + "", graphData.toArray());
@@ -105,10 +109,24 @@ public class AllDataController {
         model.addAttribute("indicatorLen",indicatorLen);
         model.addAttribute("yearBefore",data.getYearBefore());
         model.addAttribute("yearAfter",data.getYearAfter());
+        model.addAttribute("years", years);
 
         return new ModelAndView(pageName, model);
     }
 
+    public List<String> findYearsAverage(List<String> years,int yearBefore,int yearAfter,int avgNum){
+        int count = 0;
+        for (int i =  yearBefore; i <= yearAfter; i=i+avgNum) {
+            count=i+avgNum;
+            if(count<=yearAfter){
+                years.add(i+" - "+count);
+            }else{
+                int res = yearAfter-i;
+                years.add(i+" - "+(i+res));
+            }
+        }
+        return years;
+    }
     public List<Double> findAverage(List<Double> graphData,int YearCount,int avgNum){
         int count = 0;
         int trueCount = 0;
@@ -136,6 +154,5 @@ public class AllDataController {
 
         return test;
     }
-
 
 }

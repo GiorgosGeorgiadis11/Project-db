@@ -32,10 +32,7 @@
         var countryNames = [[${countryNames}]];
         var indicatorNames = [[${indicatorNames}]];
 
-        var years = []
-        for (let i = [[${yearBefore}]]; i <= [[${yearAfter}]]; i++) {
-            years.push(i)
-        }
+        var years = [[${years}]];
 
         var data = []
         let counter = 0
@@ -51,6 +48,10 @@
 
             title: {
                 text: 'Line Chart'
+            },
+            xAxis: {
+                categories: years,
+                crosshair: true
             },
             yAxis: {
                 title: {
@@ -69,7 +70,6 @@
                     label: {
                         connectorAllowed: false
                     },
-                    pointStart: [[${yearBefore}]],
                 }
             },
 
