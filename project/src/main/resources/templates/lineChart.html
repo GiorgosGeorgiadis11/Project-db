@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>graph</title>
+    <title>Line Chart</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link   href="../assets/css/bootstrap.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@
         <div id="container"></div>
     </figure>
 
-    <a href="/graph" class="btn btn-primary">graph data</a>
+    <a href="/graph" class="btn btn-primary">New Graph</a>
 
 
 
@@ -32,13 +32,16 @@
         var countryNames = [[${countryNames}]];
         var indicatorNames = [[${indicatorNames}]];
 
-
+        var years = []
+        for (let i = [[${yearBefore}]]; i <= [[${yearAfter}]]; i++) {
+            years.push(i)
+        }
 
         var data = []
         let counter = 0
         for (let i = 0; i < [[${indicatorLen}]]; i++) {
             for(let j=0; j<[[${countryLen}]]; j++){
-                data.push({"name": indicatorNames[i] + "for" + countryNames[j],"data": dataValues[counter]})
+                data.push({"name": indicatorNames[i] + " for " + countryNames[j],data: dataValues[counter]})
                 counter ++
             }
 
@@ -47,9 +50,8 @@
         Highcharts.chart('container', {
 
             title: {
-                text: 'test graph'
+                text: 'Line Chart'
             },
-
             yAxis: {
                 title: {
                     text: 'value'
@@ -67,7 +69,7 @@
                     label: {
                         connectorAllowed: false
                     },
-                    pointStart: [[${pointSYear}]],
+                    pointStart: [[${yearBefore}]],
                 }
             },
 

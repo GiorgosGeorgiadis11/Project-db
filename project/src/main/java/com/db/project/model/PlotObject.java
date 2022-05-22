@@ -15,5 +15,7 @@ public class PlotObject {
     private int YearBefore;
     private int YearAfter;
     private String Value;
+    private boolean years5;
+    private boolean years10;
 }
 

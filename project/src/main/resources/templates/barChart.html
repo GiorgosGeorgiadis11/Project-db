@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>BarChart</title>
+    <title>Bar Chart</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link   href="../assets/css/bootstrap.min.css" rel="stylesheet">
@@ -15,11 +15,10 @@
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 
-
 </head>
 <body>
     <div id = "container" style = "width: 700px; height: 500px; margin: 0 auto"></div>
-    <a href="/graph" class="btn btn-primary">graph data</a>
+    <a href="/graph" class="btn btn-primary">New Graph</a>
     <script th:inline="javascript">
         var dataValues = [[${dataValues}]];
         var countryNames = [[${countryNames}]];
@@ -30,7 +29,6 @@
             years.push(i)
         }
 
-
         var data = []
 
         let counter = 0
@@ -39,10 +37,7 @@
                 data.push({name: indicatorNames[i] + ' for ' + countryNames[j],data: dataValues[counter]})
                 counter ++
             }
-
         }
-
-        console.log(data)
 
         Highcharts.chart('container', {
             chart: {

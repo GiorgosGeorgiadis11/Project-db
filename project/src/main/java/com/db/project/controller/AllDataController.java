@@ -8,13 +8,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 
@@ -24,6 +21,11 @@ public class AllDataController {
     @Autowired
     private AllDataService allDataService;
 
+    @RequestMapping("/index")
+    public String indexPage(){
+        return  "index";
+    }
+
     @RequestMapping("/graph")
     public ModelAndView graphPage(ModelMap model){
         List<Countries> countries = allDataService.getAllCountries();
@@ -31,17 +33,17 @@ public class AllDataController {
         List<Integer> Year = allDataService.getAllYears();
         List<Integer> countries_Id = new ArrayList<Integer>();
         List<Integer> Indicators_Id = new ArrayList<Integer>();
-        PlotObject tdata = new PlotObject(countries_Id,Indicators_Id,0,0,"");
+        PlotObject tdata = new PlotObject(countries_Id,Indicators_Id,0,0,"",false,false);
         model.addAttribute("obj",tdata);
         model.addAttribute("countries",countries);
         model.addAttribute("indicators",indicators);
         model.addAttribute("Year",Year);
         return new ModelAndView("graph", model);
     }
-    @RequestMapping("/barChart")
-    public ModelAndView barChart(@ModelAttribute("obj") PlotObject data,ModelMap model){
+
+    @PostMapping("/{pageName}")
+    public ModelAndView scatterChart(@ModelAttribute("obj") PlotObject data,ModelMap model,@PathVariable String pageName){
         num = 0;
-        List<String> countriesName = new ArrayList<String>();
         int countryLen = data.getCountries_Id().size();
         int indicatorLen = data.getIndicators_Id().size();
 
@@ -55,6 +57,12 @@ public class AllDataController {
                 List<Integer> country = Arrays.asList(data.getCountries_Id().get(countriesCounter));
                 List<Integer> indicator = Arrays.asList(data.getIndicators_Id().get(indicatorsCounter));
                 List<Double> graphData = allDataService.getGraphData(country, indicator, data.getYearBefore(), data.getYearAfter());
+                if(data.isYears5()){
+                    graphData = findAverage(graphData,data.getYearAfter()-data.getYearBefore(),5);
+                }
+                if(data.isYears10()){
+                    graphData = findAverage(graphData,data.getYearAfter()-data.getYearBefore(),10);
+                }
 
                 dataValues.put(dataCounter + "", graphData.toArray());
                 countryNames.put(countriesCounter + "", allDataService.getCountryNameById(data.getCountries_Id().get(countriesCounter)));
@@ -63,6 +71,7 @@ public class AllDataController {
                 dataCounter+=1;
             }
         }
+
         Iterator x = dataValues.keys();
         JSONArray dataValuesArray = new JSONArray();
 
@@ -86,6 +95,7 @@ public class AllDataController {
             String key = (String) z.next();
             indicatorNamesArray.put(indicatorNames.get(key));
         }
+
 
         model.addAttribute("dataValues",dataValuesArray);
         model.addAttribute("countryNames",countryNamesArray);
@@ -96,73 +106,36 @@ public class AllDataController {
         model.addAttribute("yearBefore",data.getYearBefore());
         model.addAttribute("yearAfter",data.getYearAfter());
 
-        return new ModelAndView("barChart", model);
+        return new ModelAndView(pageName, model);
     }
 
-
-    @PostMapping(value = "/lineChart")
-    @ResponseBody
-    public ModelAndView graphData(@ModelAttribute("obj") PlotObject data,ModelMap model){
-        num = 0;
-        List<String> countriesName = new ArrayList<String>();
-        int countryLen = data.getCountries_Id().size();
-        int indicatorLen = data.getIndicators_Id().size();
-
-        JSONObject dataValues = new JSONObject();
-        JSONObject countryNames = new JSONObject();
-        JSONObject indicatorNames = new JSONObject();
-
-        int dataCounter = 0;
-        for(int indicatorsCounter = 0;  indicatorsCounter<indicatorLen;   indicatorsCounter++) {
-            for (int countriesCounter = 0; countriesCounter < countryLen; countriesCounter++) {
-                List<Integer> country = Arrays.asList(data.getCountries_Id().get(countriesCounter));
-                List<Integer> indicator = Arrays.asList(data.getIndicators_Id().get(indicatorsCounter));
-
-                List<Double> graphData = allDataService.getGraphData(country, indicator, data.getYearBefore(), data.getYearAfter());
-
-                dataValues.put(dataCounter + "", graphData.toArray());
-                countryNames.put(countriesCounter + "", allDataService.getCountryNameById(data.getCountries_Id().get(countriesCounter)));
-                indicatorNames.put(indicatorsCounter+ "",allDataService.getIndicatorNameById(data.getIndicators_Id().get(indicatorsCounter)));
-
-                dataCounter+=1;
+    public List<Double> findAverage(List<Double> graphData,int YearCount,int avgNum){
+        int count = 0;
+        int trueCount = 0;
+        double avg = 0;
+        List<Double> test = new ArrayList<Double>();
+        for(int i=0;i<YearCount;i++){
+            if (count==avgNum){
+                if(avg>0){
+                    test.add(avg/trueCount);
+                }
+                count = 0;
+                avg = 0;
+                trueCount = 0;
             }
+            if(graphData.get(i)!=0){
+                avg = avg + graphData.get(i);
+                trueCount = trueCount +1;
+            }
+
+            count = count + 1;
         }
-        Iterator x = dataValues.keys();
-        JSONArray dataValuesArray = new JSONArray();
-
-        Iterator y = countryNames.keys();
-        JSONArray countryNamesArray = new JSONArray();
-
-        Iterator z = indicatorNames.keys();
-        JSONArray indicatorNamesArray = new JSONArray();
-
-        while (x.hasNext()){
-            String key = (String) x.next();
-            dataValuesArray.put(dataValues.get(key));
+        if(avg>0){
+            test.add(avg/count);
         }
 
-        while (y.hasNext()){
-            String key = (String) y.next();
-            countryNamesArray.put(countryNames.get(key));
-        }
-
-        while (z.hasNext()){
-            String key = (String) z.next();
-            indicatorNamesArray.put(indicatorNames.get(key));
-        }
-
-        model.addAttribute("dataValues",dataValuesArray);
-        model.addAttribute("countryNames",countryNamesArray);
-        model.addAttribute("indicatorNames",indicatorNamesArray);
-
-        model.addAttribute("countryLen",countryLen);
-        model.addAttribute("indicatorLen",indicatorLen);
-        model.addAttribute("pointSYear",data.getYearBefore());
-
-        return new ModelAndView("lineChart", model);
+        return test;
     }
-    public String num(){
-        num = num + 1;
-        return String.valueOf(num);
-    }
+
+
 }

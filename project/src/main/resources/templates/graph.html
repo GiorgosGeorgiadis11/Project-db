@@ -23,11 +23,11 @@
             width: 100%;
         }
     </style>
-        <form action="#" th:action="@{/barChart}" th:object="${obj}" method="post">
+        <form onchange="disEnButtons()" id="graphForm" action="#" th:object="${obj}" method="post">
             <label>Country Name:</label><br>
             <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3">
                 <div class="form-group">
-                    <select class="mul-select-Countries" multiple="true" th:field="*{Countries_Id}">
+                    <select id="NId" class="mul-select-Countries" multiple="true" th:field="*{Countries_Id}">
                         <option th:each="countries : ${countries}"
                                 th:text="${countries.Table_Name}"
                                 th:value="${countries.Country_Id}"></option>
@@ -37,32 +37,52 @@
             <label>Country Indicator:</label><br>
                 <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3">
                     <div class="form-group">
-                        <select class="mul-select-Indicators" multiple="true" th:field="*{Indicators_Id}">
+                        <select id="IId" class="mul-select-Indicators" multiple="true" th:field="*{Indicators_Id}">
                             <option th:each="indicators : ${indicators}"
                                     th:text="${indicators.Indicator_Name}"
                                     th:value="${indicators.Indicator_Id}"></option>
                         </select>
                     </div>
                 </div><br>
-            <label>Year Before:</label><br>
-            <select th:field="*{YearBefore}">
-                <option th:each="Year : ${Year}"
-                        th:text="${Year}"
-                        th:value="${Year}">
-                </option>
-            </select><br>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-2">
+                        <label>Year Before:</label><br>
+                        <select id="yearBId" th:field="*{YearBefore}">
+                            <option th:each="Year : ${Year}"
+                                    th:text="${Year}"
+                                    th:value="${Year}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                    <label>Year After:</label><br>
+                        <select id="yearAId" th:field="*{YearAfter}">
+                            <option th:each="Year : ${Year}"
+                                    th:text="${Year}"
+                                    th:value="${Year}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div>
+                            <label class="form-check-label" > Average by 5 years</label>
+                            <input id="avg5Id" disabled="true" class="form-check-input" type="checkbox" th:field="${obj.years5}"/>
+                        </div>
+                        <div>
+                            <label class="form-check-label">Average by 10 years</label>
+                            <input id="avg10Id" disabled="true" class="form-check-input" type="checkbox" th:field="${obj.years10}"/>
+                        </div>
+                    </div>
+                </div>
+            </div><br><br>
 
-            <label>Year After:</label><br>
-            <select th:field="*{YearAfter}">
-                <option th:each="Year : ${Year}"
-                        th:text="${Year}"
-                        th:value="${Year}">
-                </option>
-            </select><br><br>
-            <button type="submit" class="btn btn-info col-2">graph</button>
+            <button id="lineChart" type="submit" disabled="true" th:formaction="@{/lineChart}" class="btn btn-info col-2">Line Chart</button>
+            <button id="barChart" type="submit" disabled="true"  th:formaction="@{/barChart}" class="btn btn-info col-2">Bar Chart</button>
+            <button id="scatterChart" type="submit" disabled="true" th:formaction="@{/scatterChart}" class="btn btn-info col-2">Scatter Plot</button>
         </form>
 
-    <script>
+    <script type="text/javascript">
         $(document).ready(function(){
             $(".mul-select-Countries").select2({
                 placeholder: "select country",
@@ -77,6 +97,44 @@
                 tokenSeparators: ['/',',',';'," "]
             });
         })
+        function disEnButtons(){
+            var yearBef = document.getElementById('yearBId');
+            var valueB = yearBef.options[yearBef.selectedIndex].value;
+            var yearAft = document.getElementById('yearAId');
+            var valueA = yearAft.options[yearAft.selectedIndex].value;
+            if(valueB<=valueA) {
+                document.getElementById("lineChart").disabled = false;
+                if ((valueA - valueB) < 5) {
+                    document.getElementById("avg5Id").disabled = true;
+                    document.getElementById("avg5Id").checked = false;
+                } else {
+                    document.getElementById("avg5Id").disabled = false;
+                }
+                if ((valueA - valueB) < 10) {
+                    document.getElementById("avg10Id").disabled = true;
+                    document.getElementById("avg10Id").checked = false;
+                } else {
+                    document.getElementById("avg10Id").disabled = false;
+                }
+            }
+            else{
+                document.getElementById("lineChart").disabled = true;
+                document.getElementById("avg5Id").disabled = true;
+                document.getElementById("avg5Id").checked = false;
+                document.getElementById("avg10Id").disabled = true;
+                document.getElementById("avg10Id").checked = false;
+            }
+
+            /*try{
+                var yearBef = document.getElementById('yearBId');
+                var value = sel.options[sel.selectedIndex].value;
+                document.getElementById("lineChart").disabled = false;
+            }
+            catch{
+                document.getElementById("lineChart").disabled = true;
+            }*/
+        }
+
     </script>
 </body>
 </html>
