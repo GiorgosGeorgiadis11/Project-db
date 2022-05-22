@@ -10,7 +10,22 @@
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
 
 </head>
-<body>
+<body style="background-color: #b6d4fe">
+    <div th:replace="navBar :: navBarM"></div>
+
+    <style>
+        .center_color{
+            padding: 5%;
+            color: #4f5050;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+    </style>
+    <div class="center_color">
+        <h1>WELCOME TO THE GRAPHIO</h1>
+        <p>If you want to make a new graph, press the button New Graph up in the navigation menu.</p>
+    </div>
 
 </body>
 </html>

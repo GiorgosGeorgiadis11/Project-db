@@ -27,7 +27,7 @@ public class AllDataController {
         return  "index";
     }
 
-    @RequestMapping("/graph")
+    @RequestMapping("/newGraph/graph")
     public ModelAndView graphPage(ModelMap model){
         List<Countries> countries = allDataService.getAllCountries();
         List<Indicators> indicators = allDataService.getAllIndicators();
@@ -42,7 +42,7 @@ public class AllDataController {
         return new ModelAndView("graph", model);
     }
 
-    @PostMapping("/{pageName}")
+    @PostMapping("/graphs/{pageName}")
     public ModelAndView scatterChart(@ModelAttribute("obj") PlotObject data,ModelMap model,@PathVariable String pageName){
         num = 0;
         int countryLen = data.getCountries_Id().size();
@@ -63,9 +63,12 @@ public class AllDataController {
                     graphData = findAverage(graphData,data.getYearAfter()-data.getYearBefore(),5);
                     years = findYearsAverage(years,data.getYearBefore(),data.getYearAfter(),5);
                 }
-                if(data.isYears10()){
+                else if(data.isYears10()){
                     graphData = findAverage(graphData,data.getYearAfter()-data.getYearBefore(),10);
                     years = findYearsAverage(years,data.getYearBefore(),data.getYearAfter(),10);
+                }
+                else{
+                    years = findYearsAverage(years,data.getYearBefore(),data.getYearAfter(),1);
                 }
 
                 dataValues.put(dataCounter + "", graphData.toArray());
@@ -117,12 +120,17 @@ public class AllDataController {
     public List<String> findYearsAverage(List<String> years,int yearBefore,int yearAfter,int avgNum){
         int count = 0;
         for (int i =  yearBefore; i <= yearAfter; i=i+avgNum) {
-            count=i+avgNum;
-            if(count<=yearAfter){
-                years.add(i+" - "+count);
-            }else{
-                int res = yearAfter-i;
-                years.add(i+" - "+(i+res));
+            if(avgNum>1) {
+                count = i + avgNum;
+                if (count <= yearAfter) {
+                    years.add(i + " - " + count);
+                } else {
+                    int res = yearAfter - i;
+                    years.add(i + " - " + (i + res));
+                }
+            }
+            else{
+                years.add(String.valueOf(i));
             }
         }
         return years;

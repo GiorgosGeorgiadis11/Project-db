@@ -16,9 +16,9 @@
 
 
 </head>
-<body>
+<body style="background-color: #b6d4fe">
+    <div th:replace="navBar :: navBarM"></div>
     <div id = "container" style = "width: 700px; height: 500px; margin: 0 auto"></div>
-    <a href="/graph" class="btn btn-primary">New Graph</a>
     <script th:inline="javascript">
         var dataValues = [[${dataValues}]];
         var countryNames = [[${countryNames}]];
