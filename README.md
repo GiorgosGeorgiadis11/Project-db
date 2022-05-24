@@ -24,3 +24,5 @@
 Στον φάκελο **deliverables** περιέχονται :
 * Ένα pdf που περιέχει την αναφορά του project.
 * Ένα αρχείο txt που περιέχει το link του βίντεο με την επεξήγηση όλα του project.
+
+### Για να τρέξει το project πρέπει να αλλαχτούν το username και το password της βάσης στο αρχείο "Load data script/loadData.py" και στο αρχείο "project/src/main/resources/application.properties".
