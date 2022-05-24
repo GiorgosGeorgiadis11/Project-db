@@ -17,7 +17,6 @@ import java.util.*;
 
 @Controller
 public class AllDataController {
-    private int num;
     @Autowired
     private AllDataService allDataService;
 
@@ -43,8 +42,7 @@ public class AllDataController {
     }
 
     @PostMapping("/graphs/{pageName}")
-    public ModelAndView scatterChart(@ModelAttribute("obj") PlotObject data,ModelMap model,@PathVariable String pageName){
-        num = 0;
+    public ModelAndView Chart(@ModelAttribute("obj") PlotObject data,ModelMap model,@PathVariable String pageName){
         int countryLen = data.getCountries_Id().size();
         int indicatorLen = data.getIndicators_Id().size();
 

@@ -23,7 +23,7 @@ def createCountryCsv():
     allCountries.to_csv(folderName+"\Countries.csv",index=True)
     
 
-def createIndicatorTable():
+def createIndicatorCsv():
     Countries = glob("CountriesData\*")
     CountryIndicators = glob(Countries[0]+"\*.csv")[2]
     allIndicators = pd.read_csv(CountryIndicators, skiprows=0)#read metadata_Indicator csv
@@ -34,7 +34,7 @@ def createIndicatorTable():
     allIndicators.to_csv(folderName+"\Indicators.csv",index=True)
 
 
-def createDataTable():
+def createDataCsv():
     Countries = glob("CountriesData\*")
     for i in range(0,len(Countries)):#take all the countries that exist in the folder
         CountryData = glob(Countries[i]+"\*.csv")[0] 
@@ -60,5 +60,5 @@ def createDataTable():
 def readyForLoadCsv():
     createFolder()
     createCountryCsv()
-    createIndicatorTable()
-    createDataTable()
+    createIndicatorCsv()
+    createDataCsv()
