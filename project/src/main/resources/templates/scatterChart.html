@@ -36,11 +36,15 @@
         }
 
         var data = [];
+        var datax = null;
+        var datay = null;
         var countryLen = [[${countryLen}]];
         for(let i=0; i<countryLen; i++) {
             var xy = [];
             for (let j = 0; j < years.length; j++) {
-                xy.push([dataValues[i][j], dataValues[i+countryLen][j]]);
+                datax = dataValues[i][j];
+                datay = dataValues[i+countryLen][j];
+                xy.push([datax, datay]);
             }
             data.push({name:countryNames[i],data:xy})
         }

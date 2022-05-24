@@ -1,6 +1,4 @@
 package com.db.project.repository;
-
-import com.db.project.dto.graphDataDTO;
 import com.db.project.model.AllData;
 import com.db.project.model.AllDataPKID;
 import org.springframework.data.jpa.repository.JpaRepository;

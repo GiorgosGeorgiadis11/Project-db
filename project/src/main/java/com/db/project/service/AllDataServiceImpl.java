@@ -1,6 +1,4 @@
 package com.db.project.service;
-
-import com.db.project.dto.graphDataDTO;
 import com.db.project.model.AllData;
 import com.db.project.model.Countries;
 import com.db.project.model.Indicators;

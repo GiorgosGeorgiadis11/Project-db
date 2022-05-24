@@ -109,7 +109,7 @@ def loadInTableData():
     
 
 
-def main():
+def loadData():
     createDatabase()
     createCountyTable()
     loadInTableCountries()
@@ -117,4 +117,3 @@ def main():
     loadInTableIndicators()
     createDataTable()
     loadInTableData()
-main()

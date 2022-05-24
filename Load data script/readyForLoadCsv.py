@@ -57,9 +57,8 @@ def createDataTable():
 
 
 
-def main():
+def readyForLoadCsv():
     createFolder()
     createCountryCsv()
     createIndicatorTable()
     createDataTable()
-main()
